@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfólio Raul Tavares Cecatto</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+        header {
+            background: linear-gradient(to right, #005691, #007bff);
+            color: #fff;
+            padding: 40px 0;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        header p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        section {
+            background: #fff;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #005691;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2em;
+            position: relative;
+        }
+        h2::after {
+            content: '';
+            width: 60px;
+            height: 4px;
+            background: #007bff;
+            display: block;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        strong {
+            color: #005691;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            margin-top: 20px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .loading {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            padding: 50px;
+        }
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .card h3 {
+            color: #004085;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img id="profile-pic" src="profile.gif" alt="Foto de Raul Tavares Cecatto">
+
+    <div class="container">
+        <h1 id="nome-completo">Carregando...</h1>
+        <p id="titulo-pagina">Docente do IFMT, Pesquisador e Desenvolvedor</p>
+    </div>
+</header>
+
+<div class="container">
+
+    <section id="resumo">
+        <h2>Resumo</h2>
+        <p id="resumo-cv" class="hero summary">Carregando...</p>
+    </section>
+
+    <section id="formacao">
+        <h2>Formação Acadêmica</h2>
+        <div id="lista-formacao" class="cards-container">
+            <p class="loading">Carregando formação...</p>
+        </div>
+    </section>
+
+    <section id="atuacao-profissional">
+        <h2>Atuação Profissional</h2>
+        <div id="lista-atuacao" class="cards-container">
+            <p class="loading">Carregando atuação profissional...</p>
+        </div>
+    </section>
+
+    <section id="projetos">
+        <h2>Projetos de Pesquisa e Extensão</h2>
+        <div id="lista-projetos" class="cards-container">
+            <p class="loading">Carregando projetos...</p>
+        </div>
+    </section>
+
+    <section id="producao-bibliografica">
+        <h2>Produção Bibliográfica</h2>
+        <div id="lista-publicacoes" class="cards-container">
+            <p class="loading">Carregando publicações...</p>
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    <div class="container">
+        <p id="footer-text"></p>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const xmlFilePath = '3337450965056307.xml';
+
+        fetch(xmlFilePath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar o arquivo XML: ' + response.statusText);
+                }
+                return response.arrayBuffer();
+            })
+            .then(buffer => {
+                const decoder = new TextDecoder('iso-8859-1');
+                const xmlString = decoder.decode(buffer);
+
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+
+                const nomeCompleto = xmlDoc.querySelector('DADOS-GERAIS').getAttribute('NOME-COMPLETO');
+                document.getElementById('nome-completo').textContent = nomeCompleto;
+                document.title = nomeCompleto + " - Currículo Lattes";
+
+                const resumoCV = xmlDoc.querySelector('RESUMO-CV').getAttribute('TEXTO-RESUMO-CV-RH');
+                document.getElementById('resumo-cv').textContent = resumoCV;
+
+                // Função para popular a formação acadêmica
+                const listaFormacao = document.getElementById('lista-formacao');
+                listaFormacao.innerHTML = '';
+                const formacoes = xmlDoc.querySelectorAll('FORMACAO-ACADEMICA-TITULACAO > *');
+                formacoes.forEach(formacao => {
+                    const tipo = formacao.tagName.replace(/-/g, ' ');
+                    const nomeCurso = formacao.getAttribute('NOME-CURSO');
+                    const instituicao = formacao.getAttribute('NOME-INSTITUICAO');
+                    const status = formacao.getAttribute('STATUS-DO-CURSO');
+                    const anoInicio = formacao.getAttribute('ANO-DE-INICIO');
+                    const anoConclusao = formacao.getAttribute('ANO-DE-CONCLUSAO');
+
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.innerHTML = `
+                            <h3>${nomeCurso == null ? '' : nomeCurso }</h3>
+                            <p><strong>Tipo:</strong> ${tipo}</p>
+                            <p><strong>Instituição:</strong> ${instituicao}</p>
+                            <p><strong>Período:</strong> ${anoInicio} - ${anoConclusao || 'Em andamento'}</p>
+                            <p><strong>Status:</strong> ${status}</p>
+                        `;
+                    listaFormacao.appendChild(card);
+                });
+
+                // Função para popular a atuação profissional
+                const listaAtuacao = document.getElementById('lista-atuacao');
+                listaAtuacao.innerHTML = '';
+                const atuacoes = xmlDoc.querySelectorAll('ATUACOES-PROFISSIONAIS ATUACAO-PROFISSIONAL');
+                atuacoes.forEach(atuacao => {
+                    const nomeEmpresa = atuacao.getAttribute('NOME-INSTITUICAO');
+                    const vinculos = atuacao.querySelectorAll('VINCULOS');
+                    vinculos.forEach(vinculo => {
+                        const cargo = vinculo.getAttribute('OUTRO-ENQUADRAMENTO-FUNCIONAL-INFORMADO') || 'Não informado';
+                        const periodo = `${vinculo.getAttribute('ANO-INICIO')} - ${vinculo.getAttribute('ANO-FIM') || 'Atualmente'}`;
+
+                        const card = document.createElement('div');
+                        card.classList.add('card');
+                        card.innerHTML = `
+                                <h3>${nomeEmpresa}</h3>
+                                <p><strong>Cargo:</strong> ${cargo}</p>
+                                <p><strong>Período:</strong> ${periodo}</p>
+                            `;
+                        listaAtuacao.appendChild(card);
+                    });
+                });
+
+                // Função para popular os projetos de pesquisa e extensão
+                const listaProjetos = document.getElementById('lista-projetos');
+                listaProjetos.innerHTML = '';
+                const projetos = Array.from(xmlDoc.querySelectorAll('PROJETO-DE-PESQUISA'));
+
+                // Ordena projetos por ano de início (decrescente)
+                projetos.sort((a, b) => {
+                    const anoA = parseInt(a.getAttribute('ANO-INICIO'));
+                    const anoB = parseInt(b.getAttribute('ANO-INICIO'));
+                    return anoB - anoA;
+                });
+
+                projetos.forEach(projeto => {
+                    const nomeProjeto = projeto.getAttribute('NOME-DO-PROJETO');
+                    const anoInicio = projeto.getAttribute('ANO-INICIO');
+                    const anoFim = projeto.getAttribute('ANO-FIM') || 'Em andamento';
+                    const situacao = projeto.getAttribute('SITUACAO');
+                    const natureza = projeto.getAttribute('NATUREZA');
+                    const descricao = projeto.getAttribute('DESCRICAO-DO-PROJETO');
+
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.innerHTML = `
+                            <h3>${nomeProjeto}</h3>
+                            <p><strong>Natureza:</strong> ${natureza}</p>
+                            <p><strong>Período:</strong> ${anoInicio} - ${anoFim}</p>
+                            <p><strong>Status:</strong> ${situacao}</p>
+                            <p><strong>Descrição:</strong> ${descricao}</p>
+                        `;
+                    listaProjetos.appendChild(card);
+                });
+
+                // FUNÇÃO CORRIGIDA: Popula todas as produções bibliográficas e as ordena
+                const listaPublicacoes = document.getElementById('lista-publicacoes');
+                listaPublicacoes.innerHTML = '';
+
+                const todasProducoes = Array.from(xmlDoc.querySelectorAll('PRODUCAO-BIBLIOGRAFICA *')).filter(
+                    el => el.tagName.startsWith('ARTIGO-') || el.tagName.startsWith('TRABALHO-') || el.tagName.startsWith('CAPITULO-')
+                );
+
+                // Mapeia e extrai dados de cada produção
+                const publicacoesFormatadas = todasProducoes.map(producao => {
+                    let titulo, tipo, ano, url;
+                    const nomeTag = producao.tagName;
+
+                    switch(nomeTag) {
+                        case 'ARTIGO-PUBLICADO':
+                            titulo = producao.querySelector('DADOS-BASICOS-DO-ARTIGO').getAttribute('TITULO-DO-ARTIGO');
+                            tipo = 'Artigo Completo';
+                            ano = producao.querySelector('DADOS-BASICOS-DO-ARTIGO').getAttribute('ANO-DO-ARTIGO');
+                            url = producao.querySelector('DADOS-BASICOS-DO-ARTIGO').getAttribute('HOME-PAGE-DO-TRABALHO');
+                            break;
+                        case 'TRABALHO-EM-EVENTOS':
+                            titulo = producao.querySelector('DADOS-BASICOS-DO-TRABALHO').getAttribute('TITULO-DO-TRABALHO');
+                            tipo = 'Trabalho em Evento';
+                            ano = producao.querySelector('DADOS-BASICOS-DO-TRABALHO').getAttribute('ANO-DO-TRABALHO');
+                            url = producao.querySelector('DADOS-BASICOS-DO-TRABALHO').getAttribute('HOME-PAGE-DO-TRABALHO');
+                            break;
+                        case 'CAPITULO-DE-LIVRO-PUBLICADO':
+                            titulo = producao.querySelector('DADOS-BASICOS-DO-CAPITULO').getAttribute('TITULO-DO-CAPITULO-DO-LIVRO');
+                            tipo = 'Capítulo de Livro';
+                            ano = producao.querySelector('DADOS-BASICOS-DO-CAPITULO').getAttribute('ANO');
+                            url = producao.querySelector('DADOS-BASICOS-DO-CAPITULO').getAttribute('HOME-PAGE-DO-TRABALHO');
+                            break;
+                        default:
+                            return null;
+                    }
+
+                    return { titulo, tipo, ano: parseInt(ano), url };
+                }).filter(pub => pub !== null);
+
+                // Ordena publicações por ano (decrescente)
+                publicacoesFormatadas.sort((a, b) => b.ano - a.ano);
+
+                // Cria os cards para a página
+                publicacoesFormatadas.forEach(publicacao => {
+
+                    publicacao.url = publicacao.url.replace('[', '');
+                    publicacao.url = publicacao.url.replace(']', '');
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.innerHTML = `
+                            <h3>${publicacao.titulo}</h3>
+                            <p><strong>Tipo:</strong> ${publicacao.tipo}</p>
+                            <p><strong>Ano:</strong> ${publicacao.ano}</p>
+                            ${publicacao.url ? `<p><strong>Link:</strong> <a href="${publicacao.url}" target="_blank">Acessar</a></p>` : ''}
+                        `;
+
+                    listaPublicacoes.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('Houve um erro:', error);
+                document.body.innerHTML = '<p class="error">Erro ao carregar o currículo. Verifique se o arquivo XML está na mesma pasta.</p>';
+            });
+    });
+</script>
+</body>
+</html>
